@@ -99,21 +99,79 @@ public class GameModelTest {
     }
 
 
-
     @Test
     public void testPause() {
         lastLog = "";
+        gameController.handlePlayerInput("P"); // Pause the game
+        assertEquals("Game paused.", lastLog);
+        int originalY = gameModel.getShip().getY();
+        int originalX = gameModel.getShip().getX();
+
+        gameController.handlePlayerInput("W");
+        gameController.handlePlayerInput("A");
+        gameController.handlePlayerInput("S");
+        gameController.handlePlayerInput("D");
+
+        assertEquals(originalY, gameModel.getShip().getY());
+        assertEquals(originalX, gameModel.getShip().getX());
+
         gameController.handlePlayerInput("P");
-        String expected = "Game paused.";
-        assertEquals(expected, lastLog);
+        assertEquals("Game unpaused.", lastLog);
+
+        gameController.handlePlayerInput("W");
+        assertEquals(originalY - 1, gameModel.getShip().getY());
+        assertEquals(originalX, gameModel.getShip().getX());
     }
+
+    @Test
+    public void invalidInput() {
+        lastLog = "";
+        int originalY = gameModel.getShip().getY();
+        int originalX = gameModel.getShip().getX();
+
+        gameController.handlePlayerInput("g");
+
+        assertEquals(originalY, gameModel.getShip().getY());
+        assertEquals(originalX, gameModel.getShip().getX());
+        assertEquals("Invalid input. Use W, A, S, D, F, or P.", lastLog);
+    }
+
+    @Test
+    public void inputsWithVerbose() {
+        gameController.setVerbose(true);
+        lastLog = "";
+        int originalY = gameModel.getShip().getY();
+        int originalX = gameModel.getShip().getX();
+        gameController.handlePlayerInput("W");
+        int newY = originalY - 1;
+
+        assertEquals(newY, gameModel.getShip().getY());
+        assertEquals(originalX, gameModel.getShip().getX());
+
+        String expected = "Ship moved to (" + originalX + ", " + newY + ")";
+        assertEquals(expected, lastLog);
+
+        gameController.setVerbose(false);
+        lastLog = "";
+        gameController.handlePlayerInput("W");
+        assertEquals("", lastLog);
+    }
+
+
+
+
+
+
+
+
+
 
 
 
     @Test
     public void verboseLevelUp() {
         lastLog = "";
-        gameModel.setVerbose(true);
+        gameController.setVerbose(true);
         int levelUp = gameModel.getLevel();
 
         gameModel.getShip().addScore(50);
@@ -124,21 +182,21 @@ public class GameModelTest {
         gameModel.getShip().addScore(50);
         gameModel.levelUp();
         assertEquals(levelUp + 1, gameModel.getLevel());
-        String message1 = "Level Up! Welcome to Level " + levelUp + 1 + ". Spawn rate increased to " + 7 + "%.";
+        String message1 = "Level Up! Welcome to Level " + (levelUp + 1) + ". Spawn rate increased to " + 7 + "%.";
         assertEquals(message1, lastLog);
 
         lastLog = "";
         gameModel.getShip().addScore(200);
         gameModel.levelUp();
         assertEquals(levelUp + 2, gameModel.getLevel());
-        String message2 = "Level Up! Welcome to Level " + levelUp + 2 + ". Spawn rate increased to " + 12 + "%.";
+        String message2 = "Level Up! Welcome to Level " + (levelUp + 2) + ". Spawn rate increased to " + 12 + "%.";
         assertEquals(message2, lastLog);
     }
 
     @Test
     public void noVerboseLevelUp() {
         lastLog = "";
-        gameModel.setVerbose(false);
+        gameController.setVerbose(false);
         int levelUp = gameModel.getLevel();
 
         gameModel.getShip().addScore(50);
