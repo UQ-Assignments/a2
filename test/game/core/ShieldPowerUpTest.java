@@ -16,6 +16,7 @@ public class ShieldPowerUpTest {
         ShieldPowerUp shield = new ShieldPowerUp(10,10);
 
         shield.applyEffect(ship);
+        assertEquals(50, ship.getScore());
 
         assertEquals("", out.toString());
 

@@ -16,7 +16,7 @@ public class HealthPowerUpTest {
         HealthPowerUp heal = new HealthPowerUp(10,10);
 
         heal.applyEffect(ship);
-
+        assertEquals(70, ship.getHealth());
         assertEquals("", out.toString());
 
     }
