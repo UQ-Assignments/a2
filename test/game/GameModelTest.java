@@ -101,9 +101,19 @@ public class GameModelTest {
 
     @Test
     public void testPause() {
+        testGamePause();
+        testNoMovementWhenPaused();
+        testGameUnpause();
+        testMovementAfterUnpause();
+    }
+
+    private void testGamePause() {
         lastLog = "";
         gameController.handlePlayerInput("P"); // Pause the game
         assertEquals("Game paused.", lastLog);
+    }
+
+    private void testNoMovementWhenPaused() {
         int originalY = gameModel.getShip().getY();
         int originalX = gameModel.getShip().getX();
 
@@ -114,14 +124,24 @@ public class GameModelTest {
 
         assertEquals(originalY, gameModel.getShip().getY());
         assertEquals(originalX, gameModel.getShip().getX());
+    }
 
+    private void testGameUnpause() {
         gameController.handlePlayerInput("P");
         assertEquals("Game unpaused.", lastLog);
+    }
+
+    private void testMovementAfterUnpause() {
+        int originalY = gameModel.getShip().getY();
+        int originalX = gameModel.getShip().getX();
 
         gameController.handlePlayerInput("W");
         assertEquals(originalY - 1, gameModel.getShip().getY());
         assertEquals(originalX, gameModel.getShip().getX());
     }
+
+
+    
 
     @Test
     public void invalidInput() {
@@ -156,13 +176,6 @@ public class GameModelTest {
         gameController.handlePlayerInput("W");
         assertEquals("", lastLog);
     }
-
-
-
-
-
-
-
 
 
 
