@@ -244,13 +244,10 @@ public class GameModel {
      * Then check bullet collision:<br>
      * If a bullet collides with an enemy, remove both the enemy and the bullet. No logging required.<br>
      */
-    public void checkCollisions() {
+    public void
+    checkCollisions() {
         List<SpaceObject> toRemove = new ArrayList<>();
         for (SpaceObject obj : spaceObjects) {
-            // Skip checking Ships (No ships should be in this list)
-            if (obj instanceof Ship) {
-                continue;
-            }
             // Check Ship collision (except Bullets)
             if (isCollidingWithShip(obj.getX(), obj.getY()) && !(obj instanceof Bullet)) {
                 // Handle collision effects
@@ -264,7 +261,7 @@ public class GameModel {
                     case Asteroid asteroid -> {
                         ship.takeDamage(ASTEROID_DAMAGE);
                         if (isVerbose) {
-                            logger.log(String.format("Hit by %s! Health reduced by %d.", asteroid.render(), ENEMY_DAMAGE));
+                            logger.log(String.format("Hit by %s! Health reduced by %d.", asteroid.render(), ASTEROID_DAMAGE));
                         }
                     }
                     case Enemy enemy -> {
@@ -289,6 +286,7 @@ public class GameModel {
             for (SpaceObject other : spaceObjects) {
                 if (obj == other) continue;
                 // Check only Enemies
+
                 if ((obj.getX() == other.getX()) && (obj.getY() == other.getY())) {
 
                     if (other instanceof Enemy) {
