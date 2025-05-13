@@ -7,6 +7,7 @@ import game.achievements.PlayerStatsTracker;
 import game.core.SpaceObject;
 import game.ui.UI;
 import game.utility.Direction;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;

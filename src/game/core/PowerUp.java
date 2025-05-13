@@ -25,6 +25,5 @@ public abstract class PowerUp extends ObjectWithPosition implements PowerUpEffec
         if (tick % 10 == 0) {
             y++;
         }
-
     }
 }

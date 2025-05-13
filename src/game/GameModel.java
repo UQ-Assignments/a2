@@ -192,8 +192,6 @@ public class GameModel {
         return false;
     }
 
-
-
     /**
      * If level progression requirements are satisfied, levels up the game by
      * increasing the spawn rate and level number.<br>
