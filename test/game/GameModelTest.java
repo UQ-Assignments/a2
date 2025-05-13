@@ -98,6 +98,8 @@ public class GameModelTest {
         assertEquals(expectedTruth, gameModel.checkGameOver());
     }
 
+
+
     @Test
     public void testPause() {
         lastLog = "";
@@ -105,6 +107,8 @@ public class GameModelTest {
         String expected = "Game paused." + System.lineSeparator();
         assertEquals(expected, lastLog);
     }
+
+
 
     @Test
     public void verboseLevelUp() {
