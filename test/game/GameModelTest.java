@@ -7,6 +7,7 @@ import game.core.*;
 import game.ui.KeyHandler;
 import game.ui.Tickable;
 import game.ui.UI;
+import game.utility.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -319,5 +320,65 @@ public class GameModelTest {
         List<SpaceObject> objects = gameModel.getSpaceObjects();
         assertEquals(false, objects.contains(bullet));
         assertEquals(true, objects.contains(asteroid));
+    }
+
+
+
+
+
+
+
+
+    //update game isinbounds
+
+    @Test
+    public void boundaryCheckDownOff() {
+        Asteroid asteroid = new Asteroid(5,19);
+        gameModel.addObject(asteroid);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(9);
+
+        assertEquals(true, objects.contains(asteroid));
+    }
+
+    @Test
+    public void boundaryCheckDownOn() {
+        Asteroid asteroid = new Asteroid(9,19);
+
+        gameModel.addObject(asteroid);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(10);
+
+        assertEquals(false, objects.contains(asteroid));
+    }
+
+    @Test
+    public void boundaryCheckRight() {
+        Ship ship = new Ship(10,5, 50);
+        gameModel.addObject(ship);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(5);
+
+        assertEquals(false, objects.contains(ship));
+    }
+
+    @Test
+    public void boundaryCheckLeft() {
+        Ship ship = new Ship(-1,5, 50);
+        gameModel.addObject(ship);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(5);
+
+        assertEquals(false, objects.contains(ship));
+    }
+
+    @Test
+    public void boundaryCheckUp() {
+        Ship ship = new Ship(5,-1, 50);
+        gameModel.addObject(ship);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(5);
+
+        assertEquals(false, objects.contains(ship));
     }
 }
