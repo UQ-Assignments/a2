@@ -38,6 +38,7 @@ public class ObjectWithPositionTest {
         HealthPowerUp healthPowerUp = new HealthPowerUp(8, 8);
         String expected = "HealthPowerUp(8, 8)";
         assertEquals(expected, healthPowerUp.toString());
+
     }
 
     @Test
