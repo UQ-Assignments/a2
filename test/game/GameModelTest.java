@@ -99,21 +99,16 @@ public class GameModelTest {
     }
 
 
-    @Test
-    public void testPause() {
-        testGamePause();
-        testNoMovementWhenPaused();
-        testGameUnpause();
-        testMovementAfterUnpause();
-    }
 
-    private void testGamePause() {
+    @Test
+    public  void testGamePause() {
         lastLog = "";
         gameController.handlePlayerInput("P"); // Pause the game
         assertEquals("Game paused.", lastLog);
     }
 
-    private void testNoMovementWhenPaused() {
+    @Test
+    public  void testNoMovementWhenPaused() {
         int originalY = gameModel.getShip().getY();
         int originalX = gameModel.getShip().getX();
 
@@ -126,12 +121,16 @@ public class GameModelTest {
         assertEquals(originalX, gameModel.getShip().getX());
     }
 
-    private void testGameUnpause() {
+    @Test
+    public void testGameUnpause() {
+        lastLog = "";
+        gameController.handlePlayerInput("P");
         gameController.handlePlayerInput("P");
         assertEquals("Game unpaused.", lastLog);
     }
 
-    private void testMovementAfterUnpause() {
+    @Test
+    public void testMovementAfterUnpause() {
         int originalY = gameModel.getShip().getY();
         int originalX = gameModel.getShip().getX();
 
@@ -140,14 +139,8 @@ public class GameModelTest {
         assertEquals(originalX, gameModel.getShip().getX());
     }
 
-
     @Test
-    public void invalidInput() {
-        testInvalidInputKey();
-        testInvalidInputMessage();
-    }
-
-    private void testInvalidInputKey() {
+    public void testInvalidInputKey() {
         lastLog = "";
         int originalY = gameModel.getShip().getY();
         int originalX = gameModel.getShip().getX();
@@ -156,22 +149,18 @@ public class GameModelTest {
 
         assertEquals(originalY, gameModel.getShip().getY());
         assertEquals(originalX, gameModel.getShip().getX());
-    }
 
-    private void testInvalidInputMessage() {
         assertEquals("Invalid input. Use W, A, S, D, F, or P.", lastLog);
     }
 
 
 
 
-    @Test
-    public void inputsWithVerbose() {
-        testMoveWithVerboseEnabled();
-        testMoveWithVerboseDisabled();
-    }
 
-    private void testMoveWithVerboseEnabled() {
+
+
+    @Test
+    public void testMoveWithVerboseEnabled() {
         gameController.setVerbose(true);
         lastLog = "";
         int originalY = gameModel.getShip().getY();
@@ -186,7 +175,8 @@ public class GameModelTest {
         assertEquals(expected, lastLog);
     }
 
-    private void testMoveWithVerboseDisabled() {
+    @Test
+    public void testMoveWithVerboseDisabled() {
         gameController.setVerbose(false);
         lastLog = "";
         gameController.handlePlayerInput("W");
@@ -196,14 +186,11 @@ public class GameModelTest {
 
 
 
-    @Test
-    public void verboseLevelUp() {
-        testNoLevelUpMessageWhenScoreIsLow();
-        testLevelUpMessageWhenScoreIncreases();
-        testLevelUpMessageWhenScoreIncreasesAgain();
-    }
 
-    private void testNoLevelUpMessageWhenScoreIsLow() {
+
+
+    @Test
+    public void testNoLevelUpMessageWhenScoreIsLow() {
         lastLog = "";
         gameController.setVerbose(true);
         int levelUp = gameModel.getLevel();
@@ -213,7 +200,8 @@ public class GameModelTest {
         assertEquals("", lastLog);
     }
 
-    private void testLevelUpMessageWhenScoreIncreases() {
+    @Test
+    public void testLevelUpMessageWhenScoreIncreases() {
         lastLog = "";
         gameModel.getShip().addScore(50);
         gameModel.levelUp();
@@ -222,7 +210,8 @@ public class GameModelTest {
         assertEquals(message1, lastLog);
     }
 
-    private void testLevelUpMessageWhenScoreIncreasesAgain() {
+    @Test
+    public void testLevelUpMessageWhenScoreIncreasesAgain() {
         lastLog = "";
         gameModel.getShip().addScore(200);
         gameModel.levelUp();
@@ -238,14 +227,9 @@ public class GameModelTest {
 
 
 
-    @Test
-    public void noVerboseLevelUp() {
-        NoLevelUpMessageWhenScoreIsLowTest();
-        testNoLevelUpMessageWhenScoreIncreases();
-        testNoLevelUpMessageWhenScoreIncreasesAgain();
-    }
 
-    private void NoLevelUpMessageWhenScoreIsLowTest() {
+    @Test
+    public void NoLevelUpMessageWhenScoreIsLowTest() {
         lastLog = "";
         gameController.setVerbose(false);
         int levelUp = gameModel.getLevel();
@@ -255,7 +239,8 @@ public class GameModelTest {
         assertEquals("", lastLog);
     }
 
-    private void testNoLevelUpMessageWhenScoreIncreases() {
+    @Test
+    public void testNoLevelUpMessageWhenScoreIncreases() {
         lastLog = "";
         gameModel.getShip().addScore(50);
         gameModel.levelUp();
@@ -264,7 +249,8 @@ public class GameModelTest {
         assertEquals("", lastLog);
     }
 
-    private void testNoLevelUpMessageWhenScoreIncreasesAgain() {
+    @Test
+    public void testNoLevelUpMessageWhenScoreIncreasesAgain() {
         lastLog = "";
         gameModel.getShip().addScore(200);
         gameModel.levelUp();
@@ -272,4 +258,7 @@ public class GameModelTest {
         assertEquals(levelUp + 2, gameModel.getLevel());
         assertEquals("", lastLog);
     }
+
+
+
 }
