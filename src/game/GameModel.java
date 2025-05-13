@@ -32,7 +32,7 @@ public class GameModel {
     private int spawnRate; // The current game spawn rate
     private Logger logger; // The Logger reference used for logging.
     private PlayerStatsTracker statTracker;
-    private boolean isVerbose;
+    private boolean verbose;
 
     /**
      * Models a game, storing and modifying data relevant to the game.<br>
@@ -209,7 +209,7 @@ public class GameModel {
         while (ship.getScore() >= getLevel() * SCORE_THRESHOLD) {
             lvl++;
             spawnRate += SPAWN_RATE_INCREASE;
-            if (isVerbose) {
+            if (verbose) {
                 logger.log("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to " + spawnRate + "%.");
 
             }
@@ -244,74 +244,68 @@ public class GameModel {
      * Then check bullet collision:<br>
      * If a bullet collides with an enemy, remove both the enemy and the bullet. No logging required.<br>
      */
-    public void checkCollisions() {
+    void checkCollisions() {
         List<SpaceObject> toRemove = new ArrayList<>();
 
-        // Check Ship collision
+        // First, check for ship collisions
         for (SpaceObject obj : spaceObjects) {
             // Skip checking Ships (No ships should be in this list)
             if (obj instanceof Ship) {
                 continue;
             }
 
-            // Check collision with Ship (PowerUp, Asteroid, Enemy)
+            // Check if the ship collides with this object
             if (isCollidingWithShip(obj.getX(), obj.getY()) && !(obj instanceof Bullet)) {
                 // Handle collision effects
                 if (obj instanceof PowerUp powerUp) {
                     powerUp.applyEffect(ship);
-                    if (isVerbose) {
-                        logger.log("Power-up collected: " + obj.render());
+                    if (verbose) {
+                        logger.log("PowerUp collected: " + obj.render());
                     }
                 } else if (obj instanceof Asteroid) {
                     ship.takeDamage(ASTEROID_DAMAGE);
-                    if (isVerbose) {
+                    if (verbose) {
                         logger.log("Hit by asteroid! Health reduced by " + ASTEROID_DAMAGE + ".");
                     }
                 } else if (obj instanceof Enemy) {
                     ship.takeDamage(ENEMY_DAMAGE);
-                    if (isVerbose) {
+                    if (verbose) {
                         logger.log("Hit by enemy! Health reduced by " + ENEMY_DAMAGE + ".");
                     }
                 }
 
-                // Remove colliding object
-                toRemove.add(obj);
+                toRemove.add(obj);  // Remove the colliding object
+                continue;
             }
         }
 
-        // Check Bullet collision
+        // Then, check for bullet collisions
         for (SpaceObject obj : spaceObjects) {
-            // Only consider Bullets
+            // Check only Bullets
             if (!(obj instanceof Bullet)) {
                 continue;
             }
 
-            // Check Bullet collision with Enemy
+            // Check Bullet collision with Enemies (no logging needed)
             for (SpaceObject other : spaceObjects) {
-                // Only check if it's an Enemy
-                if (!(other instanceof Enemy)) {
-                    continue;
-                }
-
-                // If the Bullet collides with an Enemy
-                if (obj.getX() == other.getX() && obj.getY() == other.getY()) {
-                    toRemove.add(obj);  // Remove the Bullet
-                    toRemove.add(other); // Remove the Enemy
-                    statTracker.recordShotHit();     // Record successful shot hit
-                    break;               // No need to check further for this bullet
+                if (other instanceof Enemy && obj.getX() == other.getX() && obj.getY() == other.getY()) {
+                    toRemove.add(obj);  // Remove bullet
+                    toRemove.add(other); // Remove enemy
+                    statTracker.recordShotHit();     // Record successful shot
+                    break;
                 }
             }
 
-            // Check Bullet collision with Asteroid
+            // Check Bullet collision with Asteroids (no logging needed)
             for (SpaceObject other : spaceObjects) {
                 if (other instanceof Asteroid && obj.getX() == other.getX() && obj.getY() == other.getY()) {
-                    toRemove.add(obj); // Remove Bullet only
-                    break;             // No need to check further for this bullet
+                    toRemove.add(obj);  // Remove bullet
+                    break;
                 }
             }
         }
 
-        // Remove all collided objects from the space
+        // Finally, remove all the objects that collided
         spaceObjects.removeAll(toRemove);
     }
 
@@ -345,6 +339,6 @@ public class GameModel {
     }
 
     public void setVerbose(boolean verbose) {
-        isVerbose = verbose;
+        this.verbose = verbose;
     }
 }
