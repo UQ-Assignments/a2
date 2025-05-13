@@ -265,12 +265,12 @@ public class GameModel {
                 } else if (obj instanceof Asteroid) {
                     ship.takeDamage(ASTEROID_DAMAGE);
                     if (verbose) {
-                        logger.log("Hit by asteroid! Health reduced by " + ASTEROID_DAMAGE + ".");
+                        logger.log("Hit by " + obj.render() + "! Health reduced by " + ASTEROID_DAMAGE + ".");
                     }
                 } else if (obj instanceof Enemy) {
                     ship.takeDamage(ENEMY_DAMAGE);
                     if (verbose) {
-                        logger.log("Hit by enemy! Health reduced by " + ENEMY_DAMAGE + ".");
+                        logger.log("Hit by " + obj.render() + "! Health reduced by " + ENEMY_DAMAGE + ".");
                     }
                 }
 
