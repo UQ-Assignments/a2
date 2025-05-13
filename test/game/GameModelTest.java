@@ -140,11 +140,13 @@ public class GameModelTest {
         assertEquals(originalX, gameModel.getShip().getX());
     }
 
-
-    
-
     @Test
     public void invalidInput() {
+        testInvalidInputKey();
+        testInvalidInputMessage();
+    }
+
+    private void testInvalidInputKey() {
         lastLog = "";
         int originalY = gameModel.getShip().getY();
         int originalX = gameModel.getShip().getX();
@@ -153,11 +155,20 @@ public class GameModelTest {
 
         assertEquals(originalY, gameModel.getShip().getY());
         assertEquals(originalX, gameModel.getShip().getX());
+    }
+
+    private void testInvalidInputMessage() {
         assertEquals("Invalid input. Use W, A, S, D, F, or P.", lastLog);
     }
 
+
     @Test
     public void inputsWithVerbose() {
+        testMoveWithVerboseEnabled();
+        testMoveWithVerboseDisabled();
+    }
+
+    private void testMoveWithVerboseEnabled() {
         gameController.setVerbose(true);
         lastLog = "";
         int originalY = gameModel.getShip().getY();
@@ -170,7 +181,9 @@ public class GameModelTest {
 
         String expected = "Ship moved to (" + originalX + ", " + newY + ")";
         assertEquals(expected, lastLog);
+    }
 
+    private void testMoveWithVerboseDisabled() {
         gameController.setVerbose(false);
         lastLog = "";
         gameController.handlePlayerInput("W");
@@ -178,11 +191,14 @@ public class GameModelTest {
     }
 
 
-
-
-
     @Test
     public void verboseLevelUp() {
+        testNoLevelUpMessageWhenScoreIsLow();
+        testLevelUpMessageWhenScoreIncreases();
+        testLevelUpMessageWhenScoreIncreasesAgain();
+    }
+
+    private void testNoLevelUpMessageWhenScoreIsLow() {
         lastLog = "";
         gameController.setVerbose(true);
         int levelUp = gameModel.getLevel();
@@ -190,24 +206,34 @@ public class GameModelTest {
         gameModel.getShip().addScore(50);
         assertEquals(levelUp, gameModel.getLevel());
         assertEquals("", lastLog);
+    }
 
+    private void testLevelUpMessageWhenScoreIncreases() {
         lastLog = "";
         gameModel.getShip().addScore(50);
         gameModel.levelUp();
-        assertEquals(levelUp + 1, gameModel.getLevel());
-        String message1 = "Level Up! Welcome to Level " + (levelUp + 1) + ". Spawn rate increased to " + 7 + "%.";
+        int levelUp = gameModel.getLevel();
+        String message1 = "Level Up! Welcome to Level " + (levelUp) + ". Spawn rate increased to " + 7 + "%.";
         assertEquals(message1, lastLog);
+    }
 
+    private void testLevelUpMessageWhenScoreIncreasesAgain() {
         lastLog = "";
         gameModel.getShip().addScore(200);
         gameModel.levelUp();
-        assertEquals(levelUp + 2, gameModel.getLevel());
-        String message2 = "Level Up! Welcome to Level " + (levelUp + 2) + ". Spawn rate increased to " + 12 + "%.";
+        int levelUp = gameModel.getLevel();
+        String message2 = "Level Up! Welcome to Level " + (levelUp) + ". Spawn rate increased to " + 12 + "%.";
         assertEquals(message2, lastLog);
     }
 
     @Test
     public void noVerboseLevelUp() {
+        testNoLevelUpMessageWhenScoreIsLow();
+        testNoLevelUpMessageWhenScoreIncreases();
+        testNoLevelUpMessageWhenScoreIncreasesAgain();
+    }
+
+    private void NoLevelUpMessageWhenScoreIsLowTest() {
         lastLog = "";
         gameController.setVerbose(false);
         int levelUp = gameModel.getLevel();
@@ -215,17 +241,28 @@ public class GameModelTest {
         gameModel.getShip().addScore(50);
         assertEquals(levelUp, gameModel.getLevel());
         assertEquals("", lastLog);
+    }
 
+    private void testNoLevelUpMessageWhenScoreIncreases() {
         lastLog = "";
         gameModel.getShip().addScore(50);
         gameModel.levelUp();
+        int levelUp = gameModel.getLevel();
         assertEquals(levelUp + 1, gameModel.getLevel());
         assertEquals("", lastLog);
+    }
 
+    private void testNoLevelUpMessageWhenScoreIncreasesAgain() {
         lastLog = "";
         gameModel.getShip().addScore(200);
         gameModel.levelUp();
+        int levelUp = gameModel.getLevel();
         assertEquals(levelUp + 2, gameModel.getLevel());
         assertEquals("", lastLog);
     }
+
+
+
+
+
 }
