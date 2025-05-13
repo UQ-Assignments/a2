@@ -9,7 +9,7 @@ public class ControllableTest {
 
     @Test
     public void moveDownError() {
-        Ship ship = new Ship(5,9, 50);
+        Ship ship = new Ship(5,19, 50);
 
         try {
             // Attempt to move the ship up out of bounds (y = 0 -> invalid move)
@@ -50,6 +50,7 @@ public class ControllableTest {
         try {
             // Attempt to move the ship up out of bounds (y = 0 -> invalid move)
             ship.move(Direction.RIGHT);
+
         } catch (BoundaryExceededException e) {
             assertEquals("Cannot move right. Out of Bounds!", e.getMessage());
         }
