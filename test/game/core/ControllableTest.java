@@ -14,6 +14,7 @@ public class ControllableTest {
         try {
             // Attempt to move the ship up out of bounds (y = 0 -> invalid move)
             ship.move(Direction.DOWN);
+            fail("Expected BoundaryExceededException");
         } catch (BoundaryExceededException e) {
             assertEquals("Cannot move down. Out of Bounds!", e.getMessage());
         }
@@ -26,6 +27,7 @@ public class ControllableTest {
         try {
             // Attempt to move the ship up out of bounds (y = 0 -> invalid move)
             ship.move(Direction.UP);
+            fail("Expected BoundaryExceededException");
         } catch (BoundaryExceededException e) {
             assertEquals("Cannot move up. Out of Bounds!", e.getMessage());
         }
@@ -38,6 +40,7 @@ public class ControllableTest {
         try {
             // Attempt to move the ship up out of bounds (y = 0 -> invalid move)
             ship.move(Direction.LEFT);
+            fail("Expected BoundaryExceededException");
         } catch (BoundaryExceededException e) {
             assertEquals("Cannot move left. Out of Bounds!", e.getMessage());
         }
@@ -50,7 +53,7 @@ public class ControllableTest {
         try {
             // Attempt to move the ship up out of bounds (y = 0 -> invalid move)
             ship.move(Direction.RIGHT);
-
+            fail("Expected BoundaryExceededException");
         } catch (BoundaryExceededException e) {
             assertEquals("Cannot move right. Out of Bounds!", e.getMessage());
         }
