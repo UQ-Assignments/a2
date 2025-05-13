@@ -1,11 +1,11 @@
 package game.core;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import static org.junit.Assert.*;
 
-public class HealthPowerUpTest {
+public class ShieldPowerUpTest {
     @Test
     public void testApplyEffectHealsShipAndPrintsMessage() {
         var out = new ByteArrayOutputStream();
@@ -13,11 +13,14 @@ public class HealthPowerUpTest {
 
         Ship ship = new Ship(5, 5, 50);
 
-        HealthPowerUp heal = new HealthPowerUp(10,10);
+        ShieldPowerUp shield = new ShieldPowerUp(10,10);
 
-        heal.applyEffect(ship);
+        shield.applyEffect(ship);
 
         assertEquals("", out.toString());
 
     }
 }
+
+
+

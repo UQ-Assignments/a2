@@ -27,10 +27,10 @@ public class GameModel {
 
     private final Random random = new Random(); // ONLY USED IN this.spawnObjects()
     private final List<SpaceObject> spaceObjects; // List of all objects
-    private Ship boat; // Core.Ship starts at (5, 10) with 100 health
+    private Ship ship; // Core.Ship starts at (5, 10) with 100 health
     private int lvl; // The current game level
     private int spawnRate; // The current game spawn rate
-    private Logger wrter; // The Logger reference used for logging.
+    private Logger logger; // The Logger reference used for logging.
     private PlayerStatsTracker statTracker;
     private boolean isVerbose;
 
@@ -52,8 +52,8 @@ public class GameModel {
         spaceObjects = new ArrayList<>();
         lvl = START_LEVEL;
         spawnRate = START_SPAWN_RATE;
-        boat = new Ship();
-        this.wrter = wrter;
+        ship = new Ship();
+        this.logger = wrter;
         statTracker = statsTracker;
         setVerbose(true);
     }
@@ -64,7 +64,7 @@ public class GameModel {
      * @return the current ship instance.
      */
     public Ship getShip() {
-        return boat;
+        return ship;
     }
 
     /**
@@ -181,7 +181,7 @@ public class GameModel {
      * @return true if the position collides with the ship, false otherwise.
      */
     private boolean isCollidingWithShip(int x, int y) {
-        return (boat.getX() == x) && (boat.getY() == y);
+        return (ship.getX() == x) && (ship.getY() == y);
     }
 
     private boolean isOccupying(int x, int y) {
@@ -206,11 +206,11 @@ public class GameModel {
      * @hint score is not stored in the GameModel.
      */
     public void levelUp() {
-        while (boat.getScore() >= getLevel() * SCORE_THRESHOLD) {
+        while (ship.getScore() >= getLevel() * SCORE_THRESHOLD) {
             lvl++;
             spawnRate += SPAWN_RATE_INCREASE;
             if (isVerbose) {
-                wrter.log("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to " + spawnRate + "%.");
+                logger.log("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to " + spawnRate + "%.");
 
             }
         }
@@ -223,8 +223,8 @@ public class GameModel {
      * Logs "Core.Bullet fired!"<br>
      */
     public void fireBullet() {
-        int bulletX = boat.getX();
-        int bulletY = boat.getY(); // Core.Bullet starts just above the ship
+        int bulletX = ship.getX();
+        int bulletY = ship.getY(); // Core.Bullet starts just above the ship
         spaceObjects.add(new Bullet(bulletX, bulletY));
     }
 
@@ -256,21 +256,21 @@ public class GameModel {
                 // Handle collision effects
                 switch (obj) {
                     case PowerUp powerUp -> {
-                        powerUp.applyEffect(boat);
+                        powerUp.applyEffect(ship);
                         if (isVerbose) {
-                            wrter.log(String.format("PowerUp collected: %s", powerUp.render()));
+                            logger.log(String.format("PowerUp collected: %s", powerUp.render()));
                         }
                     }
                     case Asteroid asteroid -> {
-                        boat.takeDamage(ASTEROID_DAMAGE);
+                        ship.takeDamage(ASTEROID_DAMAGE);
                         if (isVerbose) {
-                            wrter.log(String.format("Hit by %s! Health reduced by %d.", asteroid.render(), ENEMY_DAMAGE));
+                            logger.log(String.format("Hit by %s! Health reduced by %d.", asteroid.render(), ENEMY_DAMAGE));
                         }
                     }
                     case Enemy enemy -> {
-                        boat.takeDamage(ENEMY_DAMAGE);
+                        ship.takeDamage(ENEMY_DAMAGE);
                         if (isVerbose) {
-                            wrter.log(String.format("Hit by %s! Health reduced by %d.", enemy.render(), ENEMY_DAMAGE));
+                            logger.log(String.format("Hit by %s! Health reduced by %d.", enemy.render(), ENEMY_DAMAGE));
                         }
                     }
                     default -> {
