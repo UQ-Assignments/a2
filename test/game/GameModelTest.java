@@ -140,6 +140,9 @@ public class GameModelTest {
         assertEquals("Invalid input. Use W, A, S, D, F, or P.", lastLog);
     }
 
+
+
+
     @Test
     public void testMoveWithVerboseEnabled() {
         gameController.setVerbose(true);
@@ -163,6 +166,12 @@ public class GameModelTest {
         gameController.handlePlayerInput("W");
         assertEquals("", lastLog);
     }
+
+
+
+
+
+
 
 
 
@@ -200,7 +209,6 @@ public class GameModelTest {
         assertEquals(message2, lastLog);
     }
 
-    
     @Test
     public void NoLevelUp() {
         lastLog = "";
@@ -231,4 +239,19 @@ public class GameModelTest {
         assertEquals(expectedLevel, gameModel.getLevel());
         assertEquals("", lastLog);
     }
+
+
+
+
+
+
+    @Test
+    public void collisionPrinting() {
+
+
+    }
+
+
+
+
 }
