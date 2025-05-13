@@ -7,13 +7,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 public class ControllableTest {
 
-    public void moveTests() {
-        moveRightError();
-        moveLeftError();
-        moveUpError();
-        moveDownError();
-    }
-
     @Test
     public void moveDownError() {
         Ship ship = new Ship(5,9, 50);
