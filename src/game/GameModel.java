@@ -242,9 +242,7 @@ public class GameModel {
      * Then check bullet collision:<br>
      * If a bullet collides with an enemy, remove both the enemy and the bullet. No logging required.<br>
      */
-    public void
-    checkCollisions() {
-        setVerbose(true);
+    public void checkCollisions() {
         List<SpaceObject> toRemove = new ArrayList<>();
         for (SpaceObject obj : spaceObjects) {
             // Skip checking Ships (No ships should be in this list)
