@@ -7,7 +7,6 @@ import game.core.*;
 import game.ui.KeyHandler;
 import game.ui.Tickable;
 import game.ui.UI;
-import game.utility.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -380,5 +379,16 @@ public class GameModelTest {
         gameModel.updateGame(5);
 
         assertEquals(false, objects.contains(ship));
+    }
+
+
+
+
+    @Test
+    public void fireBulltetPrint() {
+        lastLog = "";
+        gameModel.fireBullet();
+        assertEquals("", lastLog);
+
     }
 }

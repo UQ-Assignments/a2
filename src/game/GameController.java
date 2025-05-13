@@ -2,28 +2,24 @@ package game;
 
 import game.achievements.Achievement;
 import game.achievements.AchievementManager;
-import game.achievements.GameAchievement;
 import game.achievements.PlayerStatsTracker;
 import game.core.SpaceObject;
 import game.ui.UI;
 import game.utility.Direction;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * The Controller handling the game flow and interactions.
- * <p>
- * Holds references to the UI and the Model, so it can pass information and references back and forth as necessary.<br>
- * Manages changes to the game, which are stored in the Model, and displayed by the UI.<br>
+ *
+ * Holds references to the UI and the Model, so it can pass information and references back and forth as necessary.
+ * Manages changes to the game, which are stored in the Model, and displayed by the UI.
  */
 public class GameController {
     private long startTime;
     private final UI ui;
     private final GameModel model;
-    private final AchievementManager aManager;
+    private final AchievementManager achievementManager;
 
     /**
      * An internal variable indicating whether certain methods should log their actions.
@@ -34,49 +30,73 @@ public class GameController {
 
 
     /**
-     * Initializes the game controller with the given UI, GameModel and AchievementManager.<br>
-     * Stores the UI, GameModel, AchievementManager and start time.<br>
-     * The start time System.currentTimeMillis() should be stored as a long.<br>
-     * Starts the UI using UI.start().<br>
+     * Constructs a new GameController.
      *
-     * @param ui the UI used to draw the Game
+     * Initializes the game controller with the given UI, GameModel, and AchievementManager.
+     * Stores the UI, model, achievement manager, and the current system time as the start time.
+     * Starts the UI by calling UI.start().
+     *
+     * @param ui the UI used to draw the game
      * @param model the model used to maintain game information
-     * @param aManager the manager used to maintain achievement information
+     * @param achievementManager the manager used to maintain achievement information
+     * @requires ui != null, model != null, aManager != null
      *
-     * @requires ui is not null
-     * @requires model is not null
-     * @requires achievementManager is not null
-     * @provided
+     * @usage Example usage:
+     *
+     * UI ui = new UI();
+     * GameModel model = new GameModel();
+     * AchievementManager aManager = new AchievementManager();
+     * GameController controller = new GameController(ui, model, aManager);
+     *
+     * @assumptions The UI, GameModel, and AchievementManager are correctly initialized and functional.
      */
-    public GameController(UI ui, GameModel model, AchievementManager aManager) {
+    public GameController(UI ui, GameModel model, AchievementManager achievementManager) {
         this.ui = ui;
         this.model = model;
-        this.aManager = aManager;
+        this.achievementManager = achievementManager;
         this.startTime = System.currentTimeMillis();
         ui.start();
     }
 
     /**
-     * Initializes the game controller with the given UI and GameModel.<br>
-     * Stores the ui, model and start time.<br>
-     * The start time System.currentTimeMillis() should be stored as a long.<br>
+     * Constructs a new GameController with the given UI and AchievementManager.
      *
-     * @param ui    the UI used to draw the Game
-     * @param aManager the manager used to maintain achievement information
+     * Initializes the game controller with the given UI and a new GameModel.
+     * The GameModel is initialized with a logger and a new PlayerStatsTracker.
+     * The current system time is stored as the start time.
      *
-     * @requires ui is not null
-     * @requires achievementManager is not null
-     * @provided
+     * @param ui the UI used to draw the game
+     * @param achievementManager the manager used to maintain achievement information
+     * @requires ui != null, achievementManager != null
+     *
+     * @usage Example usage:
+     *
+     * UI ui = new UI();
+     * AchievementManager aManager = new AchievementManager();
+     * GameController controller = new GameController(ui, aManager);
+     *
+     * @assumptions The UI and AchievementManager are correctly initialized and functional.
      */
-    public GameController(UI ui, AchievementManager aManager) {
-        this(ui, new GameModel(ui::log, new PlayerStatsTracker()), aManager);
+    public GameController(UI ui, AchievementManager achievementManager) {
+        this(ui, new GameModel(ui::log, new PlayerStatsTracker()), achievementManager);
     }
 
     /**
-     * Starts the main game loop.<br>
-     * <p>
-     * Passes onTick and handlePlayerInput to ui.onStep and ui.onKey respectively.
+     * Starts the main game loop.
+     *
+     * Initializes the game loop by passing the onTick method to the UI's onStep method,
+     * and the handlePlayerInput method to the UI's onKey method. This begins the continuous
+     * update of the game state and handles player input.
+     *
+     * Sets the start time for the game using the current system time in milliseconds.
+     *
      * @provided
+     *
+     * @usage Example usage:
+     *
+     * controller.startGame();
+     *
+     * @assumptions The game will start without issues if the UI and key handling are correctly set up.
      */
     public void startGame() {
         ui.onStep(this::onTick);
@@ -92,8 +112,15 @@ public class GameController {
      * - A call to model.levelUp() to check and handle leveling.<br>
      * - A call to refreshAchievements(tick) to handle achievement updating.<br>
      * - A call to renderGame() to draw the current state of the game.<br>
+     *
      * @param tick the provided tick
      * @provided
+     *
+     * @usage Example usage:
+     *
+     * controller.onTick(10);
+     *
+     * @assumptions The game model and achievements are properly updated and managed during each tick.
      */
     public void onTick(int tick) {
         model.updateGame(tick); // Update GameObjects
@@ -113,18 +140,24 @@ public class GameController {
 
     /**
      * Displays a Game Over window containing the player's final statistics and achievement
-     * progress.<br>
-     * <p>
-     * This window includes:<br>
-     * - Number of shots fired and shots hit<br>
-     * - Number of Enemies destroyed<br>
-     * - Survival time in seconds<br>
+     * progress.
+     *
+     * This window includes:
+     * - Number of shots fired and shots hi
+     * - Number of Enemies destroyed
+     * - Survival time in second
      * - Progress for each achievement, including name, description, completion percentage
-     * and current tier<br>
+     * and current tier
+     *
      * @provided
+     *
+     * @usage Example usage:
+     *
+     * controller.showGameOverWindow();
+     *
+     * @assumptions This method assumes that the achievement manager and stats tracker are available and properly initialized.
      */
     private void showGameOverWindow() {
-
         // Create a new window to display game over stats.
         javax.swing.JFrame gameOverFrame = new javax.swing.JFrame("Game Over - Player Stats");
         gameOverFrame.setSize(400, 300);
@@ -139,7 +172,7 @@ public class GameController {
         sb.append("Survival Time: ").append(getStatsTracker().getElapsedSeconds()).append(" seconds\n");
 
 
-        List<Achievement> achievements= aManager.getAchievements();
+        List<Achievement> achievements = achievementManager.getAchievements();
         for (Achievement ach : achievements) {
             double progressPercent = ach.getProgress() * 100;
             sb.append(ach.getName())
@@ -169,7 +202,23 @@ public class GameController {
 
     /**
      * Renders the game state, updating the UI with the current score, health, level, and time survived.
-     * Also, renders all space objects, including the ship.
+     *
+     * This method updates the game's display to reflect the current state. It will show:
+     * - The score of the player's ship
+     * - The health of the player's ship
+     * - The current level
+     * - The time survived since the game started
+     * Additionally, it renders all the space objects in the game, including the ship itself.
+     *
+     * The method interacts with the UI to update the player's statistics and displays a list of space objects.
+     * This allows the player to see their current progress and any relevant visual representation of the game state.
+     *
+     * @provided
+     * @usage
+     *
+     * // Assuming `game` is an instance of the game class
+     * game.renderGame(); // Updates the UI with the current game stats and renders space objects
+     *
      */
     public void renderGame() {
         ui.setStat("Score", String.valueOf(model.getShip().getScore()));
@@ -181,15 +230,77 @@ public class GameController {
         ui.render(temp);
     }
 
+    /**
+     * Retrieves the player statistics tracker associated with the game model.
+     *
+     * This method returns the `PlayerStatsTracker` which is responsible for tracking and managing the player's statistics,
+     * such as shots fired, shots hit, enemies destroyed, and other relevant data during gameplay.
+     * The stats tracker is typically used for achievement tracking and providing feedback to the player.
+     *
+     * @return the `PlayerStatsTracker` instance associated with the game model
+     * @provided
+     * @example
+     *
+     * // Assuming `game` is an instance of the game class
+     * PlayerStatsTracker statsTracker = game.getStatsTracker();
+     * System.out.println("Shots Fired: " + statsTracker.getShotsFired());
+     *
+     */
     public PlayerStatsTracker getStatsTracker() {
         return model.getStatsTracker();
     }
 
+    /**
+     * Sets the verbosity level for game logging and updates the game model's verbosity setting.
+     *
+     * This method enables or disables verbose logging, which can be useful for debugging or providing detailed feedback
+     * during gameplay. When verbosity is enabled, the game will log additional information to the UI, such as movement
+     * details, state changes, and achievement progress.
+     *
+     * The method also propagates the verbosity setting to the game model, which might use it for internal logging or tracking purposes.
+     *
+     * @param verbose if true, enables verbose logging; if false, disables verbose logging
+     * @provided
+     * @example
+     *
+     * // Assuming `game` is an instance of the game class
+     * game.setVerbose(true); // Enable verbose logging
+     * game.setVerbose(false); // Disable verbose logging
+     *
+     */
     public void setVerbose(boolean verbose) {
         isVerbose = verbose;
         getModel().setVerbose(verbose);
     }
 
+    /**
+     * Handles player input and performs actions such as moving the ship or firing bullets.
+     * <p>
+     * This method processes the player's input and takes appropriate actions based on the command provided. The following
+     * actions are supported:
+     *
+     *     "W": Move the ship up
+     *     "A": Move the ship left
+     *     "S": Move the ship down
+     *     <"D": Move the ship right
+     *     <"F": Fire a bullet
+     *     "P": Pause or unpause the game
+     *
+     * When the game is paused, only un-pausing is allowed. Invalid inputs will be logged.
+     *
+     * If verbosity is enabled, the method logs the ship's movement (e.g., "Ship moved to (x, y)") whenever the ship is moved.
+     *
+     * @param input the player's input command, which is a single character (W, A, S, D, F, or P).
+     * @provided
+     * @example
+     *
+     * // Assuming `game` is an instance of the game class
+     * game.handlePlayerInput("W"); // Move the ship up
+     * game.handlePlayerInput("F"); // Fire a bullet
+     * game.handlePlayerInput("P"); // Pause or unpause the game
+     * game.handlePlayerInput("X"); // Invalid input
+     *
+     */
     public void handlePlayerInput(String input) {
         input = input.toUpperCase();
 
@@ -232,7 +343,20 @@ public class GameController {
         }
     }
 
-
+    /**
+     * Pauses or unpauses the game.
+     *
+     * This method toggles the paused state of the game. When the game is paused, no actions can be performed, except for
+     * unpausing the game. The UI will reflect the change in state by pausing or unpausing the game and logging the
+     * appropriate message.
+     *
+     * @provided
+     * @example
+     *
+     * // Assuming `game` is an instance of the game class
+     * game.pauseGame(); // Pauses or unpauses the game based on its current state
+     *
+     */
     public void pauseGame() {
         ui.pause();
         isPaused = !isPaused;
@@ -244,6 +368,25 @@ public class GameController {
         }
     }
 
+    /**
+     * Refreshes the achievement progress based on the current game stats.
+     *
+     * This method updates the progress for various achievements based on the player's performance:
+     *
+     *     "Survivor" - Progress is based on the time survived (max 120 seconds).
+     *     "Enemy Exterminator" - Progress is based on the number of shots hit (max 20 hits).
+     *     "Sharp Shooter" - Progress is based on shot accuracy (only if more than 10 shots fired).
+     *
+     * The achievement progress is logged at regular intervals when verbosity is enabled.
+     *
+     * @param tick The current game tick, used to control the frequency of logging achievement progress.
+     * @provided
+     * @example
+     *
+     * // Assuming `game` is an instance of the game class
+     * game.refreshAchievements(100); // Refresh achievement progress every 100 ticks
+     *
+     */
     public void refreshAchievements(int tick) {
         float result;
         int shotsFired = model.getStatsTracker().getShotsFired();
@@ -260,9 +403,9 @@ public class GameController {
             result = 0.0f;
         }
 
-        aManager.updateAchievement("Survivor", survivalTimeProgress);
-        aManager.updateAchievement("Enemy Exterminator", shotHitProgress);
-        aManager.updateAchievement("Sharp Shooter", result);
+        achievementManager.updateAchievement("Survivor", survivalTimeProgress);
+        achievementManager.updateAchievement("Enemy Exterminator", shotHitProgress);
+        achievementManager.updateAchievement("Sharp Shooter", result);
 
         if (isVerbose && tick % 100 == 0) {
             ui.log("Achievement Progress:");
@@ -270,9 +413,23 @@ public class GameController {
             ui.log(String.format("  Enemy Exterminator: %.2f", shotHitProgress));
             ui.log(String.format("  Sharp Shooter: %.2f", result));
         }
-        aManager.logAchievementMastered(); //Do i need this
+        achievementManager.logAchievementMastered(); //Do i need this
     }
 
+    /**
+     * Retrieves the current game model.
+     *
+     * This method provides access to the underlying game model, which contains the game state, such as the ship's
+     * position, the level, and other relevant data.
+     *
+     * @return The current game model.
+     * @provided
+     * @example
+     *
+     * // Assuming `game` is an instance of the game class
+     * GameModel model = game.getModel(); // Get the current game model
+     *
+     */
     public GameModel getModel() {
         return this.model;
     }
