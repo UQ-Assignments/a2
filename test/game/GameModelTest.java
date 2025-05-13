@@ -140,6 +140,7 @@ public class GameModelTest {
         assertEquals(originalX, gameModel.getShip().getX());
     }
 
+
     @Test
     public void invalidInput() {
         testInvalidInputKey();
@@ -160,6 +161,8 @@ public class GameModelTest {
     private void testInvalidInputMessage() {
         assertEquals("Invalid input. Use W, A, S, D, F, or P.", lastLog);
     }
+
+
 
 
     @Test
@@ -189,6 +192,8 @@ public class GameModelTest {
         gameController.handlePlayerInput("W");
         assertEquals("", lastLog);
     }
+
+
 
 
     @Test
@@ -226,9 +231,16 @@ public class GameModelTest {
         assertEquals(message2, lastLog);
     }
 
+
+
+
+
+
+
+
     @Test
     public void noVerboseLevelUp() {
-        testNoLevelUpMessageWhenScoreIsLow();
+        NoLevelUpMessageWhenScoreIsLowTest();
         testNoLevelUpMessageWhenScoreIncreases();
         testNoLevelUpMessageWhenScoreIncreasesAgain();
     }
@@ -260,9 +272,4 @@ public class GameModelTest {
         assertEquals(levelUp + 2, gameModel.getLevel());
         assertEquals("", lastLog);
     }
-
-
-
-
-
 }
