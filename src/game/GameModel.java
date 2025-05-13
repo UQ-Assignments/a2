@@ -55,7 +55,6 @@ public class GameModel {
         ship = new Ship();
         this.logger = logger;
         statTracker = statsTracker;
-        setVerbose(true);
     }
 
     /**

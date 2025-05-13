@@ -28,7 +28,7 @@ public class GameController {
      * An internal variable indicating whether certain methods should log their actions.
      * Not all methods respect isVerbose.
      */
-    private boolean isVerbose = false;
+    private boolean isVerbose;
     private boolean isPaused = false;
 
 
