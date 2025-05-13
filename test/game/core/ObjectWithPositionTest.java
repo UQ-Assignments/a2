@@ -38,16 +38,12 @@ public class ObjectWithPositionTest {
         HealthPowerUp healthPowerUp = new HealthPowerUp(8, 8);
         String expected = "HealthPowerUp(8, 8)";
         assertEquals(expected, healthPowerUp.toString());
-
-        ShieldPowerUp shieldPowerUp = new ShieldPowerUp(9, 9);
-        String expected2 = "ShieldPowerUp(9, 9)";
-        assertEquals(expected2, shieldPowerUp.toString());
     }
 
-//    @Test
-//    public void testShieldPowerUpToString() {
-//        ShieldPowerUp shieldPowerUp = new ShieldPowerUp(9, 9);
-//        String expected = "ShieldPowerUp(9, 9)";
-//        assertEquals(expected, shieldPowerUp.toString());
-//    }
+    @Test
+    public void testShieldPowerUpToString() {
+        ShieldPowerUp shieldPowerUp = new ShieldPowerUp(9, 9);
+        String expected = "ShieldPowerUp(9, 9)";
+        assertEquals(expected, shieldPowerUp.toString());
+    }
 }
