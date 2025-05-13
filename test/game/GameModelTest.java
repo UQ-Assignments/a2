@@ -104,7 +104,7 @@ public class GameModelTest {
     public void testPause() {
         lastLog = "";
         gameController.handlePlayerInput("P");
-        String expected = "Game paused." + System.lineSeparator();
+        String expected = "Game paused.";
         assertEquals(expected, lastLog);
     }
 
@@ -124,14 +124,14 @@ public class GameModelTest {
         gameModel.getShip().addScore(50);
         gameModel.levelUp();
         assertEquals(levelUp + 1, gameModel.getLevel());
-        String message1 = "Level Up! Welcome to Level " + levelUp + 1 + ". Spawn rate increased to " + 7 + "%." + System.lineSeparator();
+        String message1 = "Level Up! Welcome to Level " + levelUp + 1 + ". Spawn rate increased to " + 7 + "%.";
         assertEquals(message1, lastLog);
 
         lastLog = "";
         gameModel.getShip().addScore(200);
         gameModel.levelUp();
         assertEquals(levelUp + 2, gameModel.getLevel());
-        String message2 = "Level Up! Welcome to Level " + levelUp + 2 + ". Spawn rate increased to " + 12 + "%." + System.lineSeparator();
+        String message2 = "Level Up! Welcome to Level " + levelUp + 2 + ". Spawn rate increased to " + 12 + "%.";
         assertEquals(message2, lastLog);
     }
 
