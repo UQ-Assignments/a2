@@ -45,14 +45,14 @@ public abstract class Controllable extends ObjectWithPosition {
             }
         } else if (direction == Direction.DOWN) {
             int newY = getY() + 1;
-            if (newY >= 20) {
+            if (newY >= GAME_HEIGHT) {
                 throw new BoundaryExceededException("Cannot move down. Out of Bounds!");
             } else {
                 this.y += 1;
             }
         } else if (direction == Direction.RIGHT) {
             int newX = getX() + 1;
-            if (newX >= 20) {
+            if (newX >= GAME_WIDTH) {
                 throw new BoundaryExceededException("Cannot move right. Out of Bounds!");
             } else {
                 this.x += 1;
