@@ -203,7 +203,7 @@ public class GameModel {
      * @hint score is not stored in the GameModel.
      */
     public void levelUp() {
-        while (ship.getScore() >= getLevel() * SCORE_THRESHOLD) {
+        if (ship.getScore() >= getLevel() * SCORE_THRESHOLD) {
             lvl++;
             spawnRate += SPAWN_RATE_INCREASE;
             if (isVerbose) {
