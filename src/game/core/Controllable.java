@@ -36,33 +36,30 @@ public abstract class Controllable extends ObjectWithPosition {
      * @hint game dimensions are stored in the model.
      */
     public void move(Direction direction) throws BoundaryExceededException {
-        if (direction == Direction.UP) {
-            int newY = getY() - 1;
-            if (newY < 0) {
-                throw new BoundaryExceededException("Cannot move up. Out of Bounds!");
-            } else {
-                this.y += -1;
+        switch (direction) {
+            case UP -> {
+                if (y <= 0) {
+                    throw new BoundaryExceededException("Cannot move up. Out of bounds!");
+                }
+                y--;
             }
-        } else if (direction == Direction.DOWN) {
-            int newY = getY() + 1;
-            if (newY >= GAME_HEIGHT) {
-                throw new BoundaryExceededException("Cannot move down. Out of Bounds!");
-            } else {
-                this.y += 1;
+            case DOWN -> {
+                if (y + 1 >= GAME_HEIGHT) {
+                    throw new BoundaryExceededException("Cannot move down. Out of bounds!");
+                }
+                y++;
             }
-        } else if (direction == Direction.RIGHT) {
-            int newX = getX() + 1;
-            if (newX >= GAME_WIDTH) {
-                throw new BoundaryExceededException("Cannot move right. Out of Bounds!");
-            } else {
-                this.x += 1;
+            case LEFT -> {
+                if (x <= 0) {
+                    throw new BoundaryExceededException("Cannot move left. Out of bounds!");
+                }
+                x--;
             }
-        } else if (direction == Direction.LEFT) {
-            int newX = getX() - 1;
-            if (newX < 0) {
-                throw new BoundaryExceededException("Cannot move left. Out of Bounds!");
-            } else {
-                this.x += -1;
+            case RIGHT -> {
+                if (x + 1 >= GAME_WIDTH) {
+                    throw new BoundaryExceededException("Cannot move right. Out of bounds!");
+                }
+                x++;
             }
         }
     }

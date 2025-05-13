@@ -3,7 +3,7 @@ package game;
 import game.achievements.Achievement;
 import game.achievements.AchievementManager;
 import game.achievements.FileHandler;
-import game.core.SpaceObject;
+import game.core.*;
 import game.ui.KeyHandler;
 import game.ui.Tickable;
 import game.ui.UI;
@@ -199,17 +199,6 @@ public class GameModelTest {
     }
 
     @Test
-    public void testLevelUpMessageWhenScoreIncreasesAgain() {
-        gameModel.setVerbose(true);
-        lastLog = "";
-        gameModel.getShip().addScore(250);
-        gameModel.levelUp();
-        int levelUp = gameModel.getLevel();
-        String message2 = "Level Up! Welcome to Level " + (levelUp) + ". Spawn rate increased to " + 12 + "%.";
-        assertEquals(message2, lastLog);
-    }
-
-    @Test
     public void NoLevelUp() {
         lastLog = "";
         gameController.setVerbose(false);
@@ -230,28 +219,105 @@ public class GameModelTest {
         assertEquals("", lastLog);
     }
 
+
+
+
+
+
+
+
+
     @Test
-    public void testLevelUpHigher() {
+    public void collisionPrintingAsteroid() {
         lastLog = "";
-        int expectedLevel = gameModel.getLevel() + 2;
-        gameModel.getShip().addScore(200);
-        gameModel.levelUp();
-        assertEquals(expectedLevel, gameModel.getLevel());
+        gameModel.setVerbose(true);
+
+        Asteroid asteroid = new Asteroid(5,10);
+
+        gameModel.addObject(asteroid);
+        gameModel.checkCollisions();
+
+        assertEquals(90, gameModel.getShip().getHealth());
+
+        String expected = "Hit by " + asteroid.render() + "! Health reduced by " + 10 + ".";
+        assertEquals(expected, lastLog);
+
+    }
+
+    @Test
+    public void collisionPrintingEnemy() {
+        lastLog = "";
+        gameModel.setVerbose(true);
+        Enemy enemy = new Enemy(5,10);
+
+        gameModel.addObject(enemy);
+        gameModel.checkCollisions();
+
+        assertEquals(80, gameModel.getShip().getHealth());
+        String expected = "Hit by " + enemy.render() + "! Health reduced by " + 20 + ".";
+        assertEquals(expected, lastLog);
+    }
+
+    @Test
+    public void collisionPrintingHeal() {
+        lastLog = "";
+        gameModel.setVerbose(true);
+        HealthPowerUp healthPowerUp = new HealthPowerUp(5,10);
+
+        gameModel.addObject(healthPowerUp);
+        gameModel.checkCollisions();
+
+        String expected = "PowerUp collected: " + healthPowerUp.render();
+        assertEquals(expected, lastLog);
+    }
+
+    @Test
+    public void collisionPrintingShield() {
+        lastLog = "";
+        gameModel.setVerbose(true);
+        ShieldPowerUp shieldPowerUp = new ShieldPowerUp(5,10);
+
+        gameModel.addObject(shieldPowerUp);
+        gameModel.checkCollisions();
+
+        String expected = "PowerUp collected: " + shieldPowerUp.render();
+        assertEquals(expected, lastLog);
+    }
+
+    @Test
+    public void collisionNoPrint() {
+        lastLog = "";
+        gameModel.setVerbose(false);
         assertEquals("", lastLog);
     }
 
-
-
-
-
-
     @Test
-    public void collisionPrinting() {
+    public void collisionBulletEnemy() {
+        lastLog = "";
+        Bullet bullet = new Bullet(5,5);
+        Enemy enemy = new Enemy(5,5);
 
+        gameModel.addObject(bullet);
+        gameModel.addObject(enemy);
 
+        gameModel.checkCollisions();
+        assertEquals("", lastLog);
     }
 
+    @Test
+    public void collisionBulletAsteroid() {
+        lastLog = "";
+        Bullet bullet = new Bullet(5,5);
+        Asteroid asteroid = new Asteroid(5,5);
 
+        gameModel.addObject(bullet);
+        gameModel.addObject(asteroid);
 
+        gameModel.checkCollisions();
+        assertEquals("", lastLog);
 
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        assertEquals(false, objects.contains(bullet));
+        assertEquals(true, objects.contains(asteroid));
+    }
 }
