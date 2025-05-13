@@ -186,7 +186,7 @@ public class GameController {
 
     public void setVerbose(boolean verbose) {
         isVerbose = verbose;
-        model.setVerbose(true);
+        getModel().setVerbose(verbose);
     }
 
     public void handlePlayerInput(String input) {

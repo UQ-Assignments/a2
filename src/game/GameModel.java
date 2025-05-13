@@ -46,14 +46,14 @@ public class GameModel {
      * - Instantiates a new ship. (The ship should not be stored in the SpaceObjects list)<br>
      * - Stores reference to the given logger.<br>
      *
-     * @param wrter a functional interface for passing information between classes.
+     * @param logger a functional interface for passing information between classes.
      */
-    public GameModel(Logger wrter, PlayerStatsTracker statsTracker) {
+    public GameModel(Logger logger, PlayerStatsTracker statsTracker) {
         spaceObjects = new ArrayList<>();
         lvl = START_LEVEL;
         spawnRate = START_SPAWN_RATE;
         ship = new Ship();
-        this.logger = wrter;
+        this.logger = logger;
         statTracker = statsTracker;
         setVerbose(true);
     }
@@ -211,7 +211,6 @@ public class GameModel {
             spawnRate += SPAWN_RATE_INCREASE;
             if (isVerbose) {
                 logger.log("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to " + spawnRate + "%.");
-
             }
         }
     }
@@ -246,6 +245,7 @@ public class GameModel {
      */
     public void
     checkCollisions() {
+        setVerbose(true);
         List<SpaceObject> toRemove = new ArrayList<>();
         for (SpaceObject obj : spaceObjects) {
             // Skip checking Ships (No ships should be in this list)
@@ -259,19 +259,19 @@ public class GameModel {
                     case PowerUp powerUp -> {
                         powerUp.applyEffect(ship);
                         if (isVerbose) {
-                            logger.log(String.format("PowerUp collected: %s", powerUp.render()));
+                            logger.log("PowerUp collected: " + obj.render());
                         }
                     }
                     case Asteroid asteroid -> {
                         ship.takeDamage(ASTEROID_DAMAGE);
                         if (isVerbose) {
-                            logger.log(String.format("Hit by %s! Health reduced by %d.", asteroid.render(), ENEMY_DAMAGE));
+                            logger.log("Hit by " + obj.render() + "! Health reduced by " + ASTEROID_DAMAGE + ".");
                         }
                     }
                     case Enemy enemy -> {
                         ship.takeDamage(ENEMY_DAMAGE);
                         if (isVerbose) {
-                            logger.log(String.format("Hit by %s! Health reduced by %d.", enemy.render(), ENEMY_DAMAGE));
+                            logger.log("Hit by " + obj.render() + "! Health reduced by " + ENEMY_DAMAGE + ".");
                         }
                     }
                     default -> {
