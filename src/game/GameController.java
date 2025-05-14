@@ -390,33 +390,58 @@ public class GameController {
      *
      */
     public void refreshAchievements(int tick) {
-        float result;
         int shotsFired = model.getStatsTracker().getShotsFired();
         int shotsHit = model.getStatsTracker().getShotsHit();
         long elapsedMillis = System.currentTimeMillis() - startTime;
 
+        // Survivor: mastered at 120 seconds
         double survivalTimeProgress = Math.min(elapsedMillis / 1000.0 / 120.0, 1.0);
+
+        // Enemy Exterminator: mastered at 20 hits
         double shotHitProgress = Math.min(shotsHit / 20.0, 1.0);
 
+        // Sharp Shooter: mastered at 99% accuracy, only if more than 10 shots fired
+        float sharpShooterProgress;
         if (shotsFired > 10) {
-            float accuracy = (float) shotsHit / shotsFired;
-            result = Math.min(accuracy / 0.99f, 1.0f);
+            double accuracy = model.getStatsTracker().getAccuracy();  // accuracy in 0.0–1.0
+            sharpShooterProgress = (float) Math.min(accuracy / 0.99, 1.0);
         } else {
-            result = 0.0f;
+            sharpShooterProgress = 0.0f;
         }
 
+        // Update all achievement progress
         achievementManager.updateAchievement("Survivor", survivalTimeProgress);
         achievementManager.updateAchievement("Enemy Exterminator", shotHitProgress);
-        achievementManager.updateAchievement("Sharp Shooter", result);
+        achievementManager.updateAchievement("Sharp Shooter", sharpShooterProgress);
 
+        // Check for newly mastered achievements
+        achievementManager.logAchievementMastered();
+
+        // Verbose logging to UI every 100 ticks
         if (isVerbose && tick % 100 == 0) {
-            ui.log("Achievement Progress:");
-            ui.log(String.format("  Survivor: %.2f", survivalTimeProgress));
-            ui.log(String.format("  Enemy Exterminator: %.2f", shotHitProgress));
-            ui.log(String.format("  Sharp Shooter: %.2f", result));
+            ui.logAchievements(achievementManager.getAchievements());
         }
-        achievementManager.logAchievementMastered(); //Do i need this
+
+        updateAchievements(survivalTimeProgress, shotHitProgress, sharpShooterProgress, tick);
     }
+
+    private void updateAchievements(double survivalTimeProgress, double shotHitProgress,
+                                   float sharpShooterProgress, int tick) {
+        // Update all achievement progress
+        achievementManager.updateAchievement("Survivor", survivalTimeProgress);
+        achievementManager.updateAchievement("Enemy Exterminator", shotHitProgress);
+        achievementManager.updateAchievement("Sharp Shooter", sharpShooterProgress);
+
+        // Check for newly mastered achievements
+        achievementManager.logAchievementMastered();
+
+        // Verbose logging to UI every 100 ticks
+        if (isVerbose && tick % 100 == 0) {
+            ui.logAchievements(achievementManager.getAchievements());
+        }
+    }
+
+
 
     /**
      * Retrieves the current game model.
