@@ -225,7 +225,8 @@ public class GameModel {
         if (ship.getScore() >= getLevel() * SCORE_THRESHOLD) {
             lvl++;
             spawnRate += SPAWN_RATE_INCREASE;
-            verboseLog("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to " + spawnRate + "%.");
+            verboseLog("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to "
+                    + spawnRate + "%.");
         }
     }
 
@@ -272,12 +273,14 @@ public class GameModel {
                     }
                     case Asteroid asteroid -> {
                         ship.takeDamage(ASTEROID_DAMAGE);
-                        verboseLog("Hit by " + obj.render() + "! Health reduced by " + ASTEROID_DAMAGE + ".");
+                        verboseLog("Hit by " + obj.render() + "! Health reduced by "
+                                + ASTEROID_DAMAGE + ".");
 
                     }
                     case Enemy enemy -> {
                         ship.takeDamage(ENEMY_DAMAGE);
-                        verboseLog("Hit by " + obj.render() + "! Health reduced by " + ENEMY_DAMAGE + ".");
+                        verboseLog("Hit by " + obj.render() + "! Health reduced by "
+                                + ENEMY_DAMAGE + ".");
                     }
                     default -> {
                     }
@@ -293,7 +296,9 @@ public class GameModel {
             }
             // Check Bullet collision
             for (SpaceObject other : spaceObjects) {
-                if (obj == other) continue;
+                if (obj == other) {
+                    continue;
+                }
                 // Check only Enemies
 
                 if ((obj.getX() == other.getX()) && (obj.getY() == other.getY())) {

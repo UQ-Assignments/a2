@@ -35,7 +35,7 @@ public class AchievementManager {
      * @throws NullPointerException if achievement is null
      */
     public void addAchievement(Achievement achievement) {
-        for (String name: achievementMap.keySet()) {
+        for (String name : achievementMap.keySet()) {
             if (achievement.getName().equals(name)) {
                 throw new IllegalArgumentException();
             }
@@ -69,8 +69,10 @@ public class AchievementManager {
      */
     public void logAchievementMastered() {
         for (Achievement achievement : achievementMap.values()) {
-            if (achievement.getProgress() == 1.0 && loggedAchievements.contains(achievement.getName())) {
-                String logData = "Achievement Mastered: " + achievement.getName() + " - " + achievement.getDescription();
+            if (achievement.getProgress() == 1.0
+                    && loggedAchievements.contains(achievement.getName())) {
+                String logData = "Achievement Mastered: " + achievement.getName() + " - "
+                        + achievement.getDescription();
                 achievementFile.save(logData);
                 loggedAchievements.add(achievement.getName());
             }
