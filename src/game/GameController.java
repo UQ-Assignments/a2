@@ -41,7 +41,7 @@ public class GameController {
      * @param achievementManager the manager used to maintain achievement information
      * @requires ui != null, model != null, aManager != null
      *
-     * @usage Example usage:
+     * @example
      *
      * UI ui = new UI();
      * GameModel model = new GameModel();
@@ -69,7 +69,7 @@ public class GameController {
      * @param achievementManager the manager used to maintain achievement information
      * @requires ui != null, achievementManager != null
      *
-     * @usage Example usage:
+     * @example
      *
      * UI ui = new UI();
      * AchievementManager aManager = new AchievementManager();
@@ -92,7 +92,7 @@ public class GameController {
      *
      * @provided
      *
-     * @usage Example usage:
+     * @example
      *
      * controller.startGame();
      *
@@ -116,7 +116,7 @@ public class GameController {
      * @param tick the provided tick
      * @provided
      *
-     * @usage Example usage:
+     * @example
      *
      * controller.onTick(10);
      *
@@ -151,7 +151,7 @@ public class GameController {
      *
      * @provided
      *
-     * @usage Example usage:
+     * @example
      *
      * controller.showGameOverWindow();
      *
@@ -169,7 +169,8 @@ public class GameController {
         sb.append("Shots Fired: ").append(getStatsTracker().getShotsFired()).append("\n");
         sb.append("Shots Hit: ").append(getStatsTracker().getShotsHit()).append("\n");
         sb.append("Enemies Destroyed: ").append(getStatsTracker().getShotsHit()).append("\n");
-        sb.append("Survival Time: ").append(getStatsTracker().getElapsedSeconds()).append(" seconds\n");
+        sb.append("Survival Time: ").append(getStatsTracker()
+                .getElapsedSeconds()).append(" seconds\n");
 
 
         List<Achievement> achievements = achievementManager.getAchievements();
@@ -214,7 +215,7 @@ public class GameController {
      * This allows the player to see their current progress and any relevant visual representation of the game state.
      *
      * @provided
-     * @usage
+     * @example
      *
      * // Assuming `game` is an instance of the game class
      * game.renderGame(); // Updates the UI with the current game stats and renders space objects
@@ -339,7 +340,8 @@ public class GameController {
         }
 
         if (isVerbose && moved) {
-            ui.log("Ship moved to (" + model.getShip().getX() + ", " + model.getShip().getY() + ")");
+            ui.log("Ship moved to (" + model.getShip().getX() + ", "
+                    + model.getShip().getY() + ")");
         }
     }
 
