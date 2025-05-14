@@ -1,22 +1,21 @@
-package game.core;
+package game;
 
-import game.GameController;
-import game.GameModel;
 import game.achievements.Achievement;
 import game.achievements.AchievementManager;
 import game.achievements.FileHandler;
+import game.core.*;
 import game.ui.KeyHandler;
 import game.ui.Tickable;
 import game.ui.UI;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+
+
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class ShieldPowerUpTest {
+public class CheckGameOverTest {
     GameController gameController;
     GameModel gameModel;
     public String lastLog;
@@ -86,19 +85,16 @@ public class ShieldPowerUpTest {
     }
 
     @Test
-    public void testApplyingShield() {
-        var out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        ShieldPowerUp shield = new ShieldPowerUp(5,10);
-        gameModel.addObject(shield);
-        gameModel.checkCollisions();
-        List<SpaceObject> list = gameModel.getSpaceObjects();
+    public void checkGameOverFalse() {
+        boolean expectedTruth = false;
+        assertEquals(expectedTruth, gameModel.checkGameOver());
+    }
 
-        assertEquals(false, list.contains(shield));
-        assertEquals(50, gameModel.getShip().getScore());
-        assertEquals("", out.toString());
+    @Test
+    public void checkGameOverTrue() {
+        boolean expectedTruth = true;
+        gameModel.getShip().takeDamage(100);
+
+        assertEquals(expectedTruth, gameModel.checkGameOver());
     }
 }
-
-
-

@@ -1,22 +1,21 @@
-package game.core;
+package game;
 
-import game.GameController;
-import game.GameModel;
 import game.achievements.Achievement;
 import game.achievements.AchievementManager;
 import game.achievements.FileHandler;
+import game.core.*;
 import game.ui.KeyHandler;
 import game.ui.Tickable;
 import game.ui.UI;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+
+
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class ShieldPowerUpTest {
+public class UpdateGameTest {
     GameController gameController;
     GameModel gameModel;
     public String lastLog;
@@ -86,19 +85,54 @@ public class ShieldPowerUpTest {
     }
 
     @Test
-    public void testApplyingShield() {
-        var out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        ShieldPowerUp shield = new ShieldPowerUp(5,10);
-        gameModel.addObject(shield);
-        gameModel.checkCollisions();
-        List<SpaceObject> list = gameModel.getSpaceObjects();
+    public void boundaryCheckDownOff() {
+        Asteroid asteroid = new Asteroid(5,19);
+        gameModel.addObject(asteroid);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(9);
 
-        assertEquals(false, list.contains(shield));
-        assertEquals(50, gameModel.getShip().getScore());
-        assertEquals("", out.toString());
+        assertEquals(true, objects.contains(asteroid));
     }
+
+    @Test
+    public void boundaryCheckDownOn() {
+        Asteroid asteroid = new Asteroid(9,19);
+
+        gameModel.addObject(asteroid);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(10);
+
+        assertEquals(false, objects.contains(asteroid));
+    }
+
+    @Test
+    public void boundaryCheckRight() {
+        Ship ship = new Ship(10,5, 50);
+        gameModel.addObject(ship);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(5);
+
+        assertEquals(false, objects.contains(ship));
+    }
+
+    @Test
+    public void boundaryCheckLeft() {
+        Ship ship = new Ship(-1,5, 50);
+        gameModel.addObject(ship);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(5);
+
+        assertEquals(false, objects.contains(ship));
+    }
+
+    @Test
+    public void boundaryCheckUp() {
+        Ship ship = new Ship(5,-1, 50);
+        gameModel.addObject(ship);
+        List<SpaceObject> objects = gameModel.getSpaceObjects();
+        gameModel.updateGame(5);
+
+        assertEquals(false, objects.contains(ship));
+    }
+
 }
-
-
-
