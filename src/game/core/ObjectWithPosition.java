@@ -24,16 +24,33 @@ public abstract class ObjectWithPosition implements SpaceObject {
         this.y = y;
     }
 
+
+    /**
+     * Returns the x-coordinate of this object.
+     *
+     * @return the x position
+     */
     @Override
     public int getX() {
         return x;
     }
 
+    /**
+     * Returns the y-coordinate of this object.
+     *
+     * @return the y position
+     */
     @Override
     public int getY() {
         return y;
     }
 
+    /**
+     * Returns a string representation of this object,
+     * including its class name and position.
+     *
+     * @return a string in the format ClassName(x, y)
+     */
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + x + ", " + y + ")";

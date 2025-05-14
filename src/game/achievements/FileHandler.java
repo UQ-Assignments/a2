@@ -48,7 +48,9 @@ public class FileHandler implements AchievementFile {
      * @param data the data to be saved
      */
     public void save(String data) {
+        // Open the file in append mode using a FileWriter
         try (FileWriter writer = new FileWriter(this.fileLocation, true)) {
+            // Write the data followed by a new line separator to the file
             writer.write(data + System.lineSeparator());
         } catch (IOException e) {
             System.out.println("Error");
@@ -61,15 +63,19 @@ public class FileHandler implements AchievementFile {
      * @return a list of saved data entries
      */
     public List<String> read() {
+        // Create a list to store the lines read from the file
         List<String> lines = new ArrayList<>();
+        // Try reading from the file using BufferedReader
         try (BufferedReader reader = new BufferedReader(new FileReader(this.fileLocation))) {
             String line;
+            // Read each line of the file until end of file is reached
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
         } catch (IOException e) {
             System.out.println("Error");
         }
+        // Return the list of lines read from the file
         return lines;
     }
 }

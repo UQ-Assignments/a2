@@ -30,8 +30,7 @@ public class HealthPowerUp extends PowerUp {
     }
 
     /**
-     * Applies the health effect to the ship, healing it for 20 health.<br>
-     * Sends "Health restored by 20!" to standard output (using System.out.println()).<br>
+     * Applies the health effect to the ship, healing it for 20 health.
      *
      * @param ship the ship to apply the effect to.
      */

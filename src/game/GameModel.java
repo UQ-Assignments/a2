@@ -52,10 +52,16 @@ public class GameModel {
      */
 
     public GameModel(Logger logger, PlayerStatsTracker statsTracker) {
+        // Initialize the list that holds all space objects in the game
         spaceObjects = new ArrayList<>();
+        // Set the starting level
         lvl = START_LEVEL;
+        // Set the initial spawn rate for enemies or objects
         spawnRate = START_SPAWN_RATE;
+
+        // Create the player's ship
         ship = new Ship();
+        // Init Logger and statTracker
         this.logger = logger;
         statTracker = statsTracker;
     }
@@ -150,11 +156,13 @@ public class GameModel {
      * However, random calls are still made regardless of whether the object is actually spawned.
      */
 
+
     public void spawnObjects() {
         // Spawn asteroids with a chance determined by spawnRate
         if (random.nextInt(100) < spawnRate) {
             int x = random.nextInt(GAME_WIDTH); // Random x-coordinate
             int y = 0; // Spawn at the top of the screen
+            // Check if position is not colliding with the ship and if it's an unoccupied space
             if (!isCollidingWithShip(x, y) && isOccupying(x, y)) {
                 addObject(new Asteroid(x, y));
             }
@@ -165,6 +173,7 @@ public class GameModel {
         if (random.nextInt(100) < spawnRate * ENEMY_SPAWN_RATE) {
             int x = random.nextInt(GAME_WIDTH);
             int y = 0;
+            // Check if position is not colliding with the ship and if it's an unoccupied space
             if (!isCollidingWithShip(x, y) && isOccupying(x, y)) {
                 addObject(new Enemy(x, y));
             }
@@ -177,6 +186,7 @@ public class GameModel {
             int y = 0;
             PowerUp powerUp = random.nextBoolean() ? new ShieldPowerUp(x, y) :
                     new HealthPowerUp(x, y);
+            // Check if position is not colliding with the ship and if it's an unoccupied space
             if (!isCollidingWithShip(x, y) && isOccupying(x, y)) {
                 addObject(powerUp);
             }
@@ -206,7 +216,9 @@ public class GameModel {
      * @return true if the position is occupied by any space object; false otherwise.
      */
     private boolean isOccupying(int x, int y) {
+        // Loop through SpaceObjects
         for (SpaceObject spaceObject : getSpaceObjects()) {
+            // If Position already is occupied
             if (spaceObject.getX() == x && spaceObject.getY() == y) {
                 return false;
             }
@@ -222,9 +234,11 @@ public class GameModel {
      * If verbose mode is enabled, a message is logged to indicate the level up.
      */
     public void levelUp() {
+        // If conditions are met to level Up
         if (ship.getScore() >= getLevel() * SCORE_THRESHOLD) {
-            lvl++;
-            spawnRate += SPAWN_RATE_INCREASE;
+            lvl++; // Level Up
+            spawnRate += SPAWN_RATE_INCREASE; // Increase Spawn Rate
+            // Log Level Up if Verbose is true
             verboseLog("Level Up! Welcome to Level " + lvl + ". Spawn rate increased to "
                     + spawnRate + "%.");
         }
@@ -244,17 +258,14 @@ public class GameModel {
 
     /**
      * Detects and handles collisions between the ship, bullets, and other space objects.
-     * <p>
+     *
      * A collision occurs when two objects share the same x and y coordinates.
-     * <p>
+     *
      * Ship collision handling:
      * - If the ship collides with a PowerUp, apply its effect and log a message if verbose is true.
      * - If the ship collides with an Asteroid or Enemy, the ship takes damage and a message is logged if verbose is true.
      * - The colliding object is removed from the game after any ship collision.
-     * <p>
-     * Bullet collision handling:
-     * - If a bullet hits an Enemy, both the bullet and the enemy are removed. Also calls recordShotHit().
-     * - If a bullet hits an Asteroid, only the bullet is removed.
+     *
      */
     public void checkCollisions() {
         List<SpaceObject> toRemove = new ArrayList<>();
@@ -268,17 +279,23 @@ public class GameModel {
                 // Handle collision effects
                 switch (obj) {
                     case PowerUp powerUp -> {
+                        // Apply the effect of the power-up on the ship
                         powerUp.applyEffect(ship);
+                        // Log the collection of the power-up with verbose information
                         verboseLog("PowerUp collected: " + obj.render());
                     }
                     case Asteroid asteroid -> {
+                        // Apply damage to the ship from the asteroid collision
                         ship.takeDamage(ASTEROID_DAMAGE);
+                        // Log the collision and the resulting damage
                         verboseLog("Hit by " + obj.render() + "! Health reduced by "
                                 + ASTEROID_DAMAGE + ".");
 
                     }
                     case Enemy enemy -> {
+                        // Apply damage to the ship from the enemy collision
                         ship.takeDamage(ENEMY_DAMAGE);
+                        // Log the collision and the resulting damage
                         verboseLog("Hit by " + obj.render() + "! Health reduced by "
                                 + ENEMY_DAMAGE + ".");
                     }
@@ -289,6 +306,22 @@ public class GameModel {
             }
         }
 
+        checkBulletCollision(toRemove);
+        spaceObjects.removeAll(toRemove); // Remove all collided objects
+    }
+
+    /**
+     * Detects and handles collisions between the ship, bullets, and other space objects.
+     *
+     * A collision occurs when two objects share the same x and y coordinates.
+     *
+     * @param toRemove the list of SpaceObjects to remove
+     * Bullet collision handling:
+     *  - If a bullet hits an Enemy, both the bullet and the enemy are removed. Also calls recordShotHit().
+     *  - If a bullet hits an Asteroid, only the bullet is removed.
+     */
+
+    private void checkBulletCollision(List<SpaceObject> toRemove) {
         for (SpaceObject obj : spaceObjects) {
             // Check only Bullets
             if (!(obj instanceof Bullet)) {
@@ -316,8 +349,6 @@ public class GameModel {
                 }
             }
         }
-
-        spaceObjects.removeAll(toRemove); // Remove all collided objects
     }
 
     /**
@@ -356,8 +387,10 @@ public class GameModel {
      */
     public static boolean isInBounds(SpaceObject spaceObject) {
         if (spaceObject.getX() >= GAME_WIDTH || spaceObject.getX() < 0) {
+            // If the x-coordinate is out of bounds, return false
             return false;
         } else if (spaceObject.getY() >= GAME_HEIGHT || spaceObject.getY() < 0) {
+            // If the y-coordinate is out of bounds, return false
             return false;
         }
         return true;

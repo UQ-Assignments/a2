@@ -30,8 +30,8 @@ public class ShieldPowerUp extends PowerUp {
     }
 
     /**
-     * Applies the shield effect to the ship, increasing the score by 50.<br>
-     * Sends "Shield activated! Score increased by 50." to standard output (using System.out.println()).<br>
+     * Applies the shield effect to the ship, increasing the score by 50.
+     *
      *
      * @param ship the ship to apply the effect to.
      */

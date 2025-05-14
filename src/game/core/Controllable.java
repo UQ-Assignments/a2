@@ -38,27 +38,35 @@ public abstract class Controllable extends ObjectWithPosition {
     public void move(Direction direction) throws BoundaryExceededException {
         switch (direction) {
             case UP -> {
+                // Check if moving up goes out of bounds
                 if (y <= 0) {
                     throw new BoundaryExceededException("Cannot move up. Out of bounds!");
                 }
+                // Move up
                 y--;
             }
             case DOWN -> {
+                // Check if moving down goes out of bounds
                 if (y + 1 >= GAME_HEIGHT) {
                     throw new BoundaryExceededException("Cannot move down. Out of bounds!");
                 }
+                // Move down
                 y++;
             }
             case LEFT -> {
+                // Check if moving left goes out of bounds
                 if (x <= 0) {
                     throw new BoundaryExceededException("Cannot move left. Out of bounds!");
                 }
+                // Move left
                 x--;
             }
             case RIGHT -> {
+                // Check if moving right goes out of bounds
                 if (x + 1 >= GAME_WIDTH) {
                     throw new BoundaryExceededException("Cannot move right. Out of bounds!");
                 }
+                // Move right
                 x++;
             }
         }

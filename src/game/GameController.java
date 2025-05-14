@@ -51,10 +51,15 @@ public class GameController {
      * @assumptions The UI, GameModel, and AchievementManager are correctly initialized and functional.
      */
     public GameController(UI ui, GameModel model, AchievementManager achievementManager) {
+        // Store reference to the UI component
         this.ui = ui;
+        // Store reference to the game model
         this.model = model;
+        // Store reference to the achievement manager
         this.achievementManager = achievementManager;
+        // Record the start time of the game in milliseconds
         this.startTime = System.currentTimeMillis();
+        // Start the UI
         ui.start();
     }
 
@@ -160,29 +165,30 @@ public class GameController {
     private void showGameOverWindow() {
         // Create a new window to display game over stats.
         javax.swing.JFrame gameOverFrame = new javax.swing.JFrame("Game Over - Player Stats");
-        gameOverFrame.setSize(400, 300);
+        gameOverFrame.setSize(400, 300); // Set window size
         gameOverFrame.setLocationRelativeTo(null); // center on screen
         gameOverFrame.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
 
-
+        // Build a string of player statistics using a StringBuilder
         StringBuilder sb = new StringBuilder();
         sb.append("Shots Fired: ").append(getStatsTracker().getShotsFired()).append("\n");
         sb.append("Shots Hit: ").append(getStatsTracker().getShotsHit()).append("\n");
+        // Assuming "Enemies Destroyed" equals shots hit (may want separate tracking if logic differs)
         sb.append("Enemies Destroyed: ").append(getStatsTracker().getShotsHit()).append("\n");
         sb.append("Survival Time: ").append(getStatsTracker()
                 .getElapsedSeconds()).append(" seconds\n");
 
-
+        // Append achievement progress information
         List<Achievement> achievements = achievementManager.getAchievements();
         for (Achievement ach : achievements) {
-            double progressPercent = ach.getProgress() * 100;
+            double progressPercent = ach.getProgress() * 100; // Convert progress to percentage
             sb.append(ach.getName())
                     .append(" - ")
                     .append(ach.getDescription())
                     .append(" (")
                     .append(String.format("%.0f%%", progressPercent))
                     .append(" complete, Tier: ")
-                    .append(ach.getCurrentTier())
+                    .append(ach.getCurrentTier()) // Show current achievement tier
                     .append(")\n");
         }
 
@@ -222,12 +228,18 @@ public class GameController {
      *
      */
     public void renderGame() {
+        // Update the UI with the player's current score
         ui.setStat("Score", String.valueOf(model.getShip().getScore()));
+        // Update the UI with the player's current health
         ui.setStat("Health", String.valueOf(model.getShip().getHealth()));
+        // Update the UI with the current game level
         ui.setStat("Level", String.valueOf(model.getLevel()));
+        // Update the UI with the time survived, in seconds
         ui.setStat("Time Survived", ((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+        // Prepare a list of all space objects, including the player's ship
         List<SpaceObject> temp = new ArrayList<>(model.getSpaceObjects());
         temp.add(model.getShip());
+        // Render the game view with all current space objects
         ui.render(temp);
     }
 
@@ -303,8 +315,10 @@ public class GameController {
      *
      */
     public void handlePlayerInput(String input) {
+        // Convert input to uppercase to ensure consistency
         input = input.toUpperCase();
 
+        // If the game is paused
         if (isPaused) {
             if (input.equals("P")) {
                 pauseGame(); // Only allowed action while paused
@@ -312,33 +326,39 @@ public class GameController {
             return; // Ignore everything else while paused
         }
 
-        boolean moved = false;
+        boolean moved = false; // Flag to track if the ship moved
 
         switch (input) {
             case "W" -> {
+                // Move ship up
                 model.getShip().move(Direction.UP);
                 moved = true;
             }
             case "A" -> {
+                // Move ship right
                 model.getShip().move(Direction.LEFT);
                 moved = true;
             }
             case "S" -> {
+                // Move ship left
                 model.getShip().move(Direction.DOWN);
                 moved = true;
             }
             case "D" -> {
+                // Move ship down
                 model.getShip().move(Direction.RIGHT);
                 moved = true;
             }
             case "F" -> {
+                //Fire Bullet
                 model.fireBullet();
                 model.getStatsTracker().recordShotFired();
             }
+            //Pause Game
             case "P" -> pauseGame();
-            default -> ui.log("Invalid input. Use W, A, S, D, F, or P.");
+            default -> ui.log("Invalid input. Use W, A, S, D, F, or P."); // Handle unrecognized input
         }
-
+        // If verbose mode is enabled and the ship moved, log the new position
         if (isVerbose && moved) {
             ui.log("Ship moved to (" + model.getShip().getX() + ", "
                     + model.getShip().getY() + ")");
@@ -424,6 +444,20 @@ public class GameController {
 
         updateAchievements(survivalTimeProgress, shotHitProgress, sharpShooterProgress, tick);
     }
+
+
+    /**
+     * Updates the progress of various achievements based on current game metrics.
+     *
+     * @param survivalTimeProgress   the progress value for the "Survivor" achievement (0.0 to 1.0)
+     * @param shotHitProgress        the progress value for the "Enemy Exterminator" achievement (0.0 to 1.0)
+     * @param sharpShooterProgress   the progress value for the "Sharp Shooter" achievement (0.0 to 1.0)
+     * @param tick                   the current game tick, used to determine logging intervals
+     *
+     * Updates the achievement manager with the latest progress for each achievement.
+     * If any achievements are newly mastered, logs them. Additionally, logs all achievements
+     * to the UI every 100 ticks if verbose mode is enabled.
+     */
 
     private void updateAchievements(double survivalTimeProgress, double shotHitProgress,
                                    float sharpShooterProgress, int tick) {

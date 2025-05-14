@@ -20,10 +20,14 @@ public class AchievementManager {
      * @throws IllegalArgumentException if achievementFile is null
      */
     public AchievementManager(AchievementFile achievementFile) {
+        // Check if the provided achievement file is null
         if (achievementFile == null) {
             throw new IllegalArgumentException();
         }
+
+        // Set the achievement file reference if it's not null
         this.achievementFile = achievementFile;
+        // Initialize a HashSet to store logged achievements (avoiding duplicates)
         this.loggedAchievements = new HashSet<>();
     }
 
@@ -35,11 +39,14 @@ public class AchievementManager {
      * @throws NullPointerException if achievement is null
      */
     public void addAchievement(Achievement achievement) {
+        // Iterate through all keys (achievement names) in the achievementMap
         for (String name : achievementMap.keySet()) {
+            // Check if the provided achievement's name already exists in the map
             if (achievement.getName().equals(name)) {
                 throw new IllegalArgumentException();
             }
         }
+        // If no duplicate is found, add the new achievement to the achievementMap
         achievementMap.put(achievement.getName(), achievement);
     }
 
@@ -52,12 +59,15 @@ public class AchievementManager {
      */
     public void updateAchievement(String achievementName, double absoluteProgressValue) {
         boolean found = false;
+        // Iterate through all keys (achievement names) in the achievementMap
         for (String name : achievementMap.keySet()) {
             if (achievementName.equals(name)) {
+                // Update the progress of the corresponding achievement
                 achievementMap.get(name).setProgress(absoluteProgressValue);
                 found = true;
             }
         }
+        // If the achievement was not found in the map, throw an exception
         if (!found) {
             throw new IllegalArgumentException();
         }
@@ -68,12 +78,17 @@ public class AchievementManager {
      * yet been logged, the event is logged via the AchievementFile, and the achievement is marked as logged.
      */
     public void logAchievementMastered() {
+        // Iterate through all achievement values in the achievementMap
         for (Achievement achievement : achievementMap.values()) {
+            // Check if the achievement's progress is complete (1.0)
             if (achievement.getProgress() == 1.0
                     && loggedAchievements.contains(achievement.getName())) {
+                // Create a log entry for the mastered achievement
                 String logData = "Achievement Mastered: " + achievement.getName() + " - "
                         + achievement.getDescription();
+                // Save the log entry to the achievement file
                 achievementFile.save(logData);
+                // Mark the achievement as logged by adding its name to the loggedAchievements set
                 loggedAchievements.add(achievement.getName());
             }
         }
